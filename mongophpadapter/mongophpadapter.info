@@ -1,0 +1,4 @@
+name = Mongo PHP Adapter integration
+core = 7.x
+
+dependencies[] = composer_manager
