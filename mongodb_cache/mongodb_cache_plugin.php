@@ -248,7 +248,7 @@ class Cache implements \DrupalCacheInterface {
       // Remove non-permanently cached items from the collection.
       $criteria = [
         'expire' => [
-          '$lte' => $flush_timestamp,
+          '$lte' => new \MongoDate($flush_timestamp),
           '$ne' => CACHE_PERMANENT,
         ],
       ];
@@ -267,8 +267,8 @@ class Cache implements \DrupalCacheInterface {
   /**
    * Prepare a cached item.
    *
-   * Checks that items are either permanent not yet expired, and unserializes
-   * data as appropriate.
+   * Checks that items are either permanent not yet expired, unserializes
+   * data as appropriate and converts MongoDB native dates to timestamps.
    *
    * @param array|null $cache
    *   An item loaded from cache_get() or cache_get_multiple().
@@ -284,6 +284,14 @@ class Cache implements \DrupalCacheInterface {
 
     unset($cache['_id']);
     $cache = (object) $cache;
+
+    // Provide backwards compatibility for NumberLong field types.
+    if ($cache->created instanceof \MongoDate) {
+      $cache->created = $cache->created->toDateTime()->getTimestamp();
+    }
+    if ($cache->expire instanceof \MongoDate) {
+      $cache->expire = $cache->expire->toDateTime()->getTimestamp();
+    }
 
     // If enforcing a minimum cache lifetime, validate that the data is
     // currently valid for this user before we return it by making sure the
@@ -315,8 +323,8 @@ class Cache implements \DrupalCacheInterface {
     $entry = array(
       '_id' => (string) $cid,
       'cid' => (string) $cid,
-      'created' => REQUEST_TIME,
-      'expire' => $expire,
+      'created' => new \MongoDate(REQUEST_TIME),
+      'expire' => new \MongoDate($expire),
       'serialized' => !$scalar,
       'data' => $scalar ? $data : serialize($data),
     );
@@ -381,7 +389,7 @@ class Cache implements \DrupalCacheInterface {
           $criteria = [
             'expire' => [
               '$ne' => CACHE_PERMANENT,
-              '$lte' => REQUEST_TIME,
+              '$lte' => new \MongoDate(REQUEST_TIME),
             ],
           ];
           $this->attemptRemove($criteria);
@@ -393,7 +401,7 @@ class Cache implements \DrupalCacheInterface {
         $criteria = [
           'expire' => [
             '$ne' => CACHE_PERMANENT,
-            '$lte' => REQUEST_TIME,
+            '$lte' => new \MongoDate(REQUEST_TIME),
           ],
         ];
         $this->attemptRemove($criteria);
