@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * A library of common mechanisms for modules using MongoDB.
+ */
 
 /**
  * @file
@@ -408,3 +412,4 @@ function mongodb_default_write_options($safe = TRUE) {
     }
   }
 }
+

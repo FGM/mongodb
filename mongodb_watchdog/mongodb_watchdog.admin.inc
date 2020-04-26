@@ -59,15 +59,15 @@ function mongodb_watchdog_overview() {
 
   global $pager_page_array, $pager_total, $pager_total_items, $pager_limits;
   $per_page = 50;
-  $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+  $page = isset($_GET['page']) ? $_GET['page'] : '';
   $pager_page_array = explode(',', $page);
-  $on_page = (int) $pager_page_array[0];
+  $on_page = $pager_page_array[0];
 
   $cursor = mongodb_collection(variable_get('mongodb_watchdog', 'watchdog'))
     ->find(mongodb_watchdog_build_filter_query())
     ->limit($per_page)
     ->skip($on_page * $per_page)
-    ->sort(['timestamp' => -1]);
+    ->sort(array('timestamp' => -1));
 
   $build['mongodb_watchdog_filter_form'] = drupal_get_form('mongodb_watchdog_filter_form');
   $build['mongodb_watchdog_clear_log_form'] = drupal_get_form('mongodb_watchdog_clear_log_form');
