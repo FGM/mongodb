@@ -8,12 +8,12 @@ use Drupal\Component\Serialization\Yaml;
 // @codingStandardsIgnoreLine
 use Drupal\Console\Annotations\DrupalCommand;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
-use Drupal\mongodb_watchdog\Install\Sanitycheck;
+use Drupal\mongodb_watchdog\Install\SanityCheck;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class SanityCheckCommand.
+ * Class SanityCheckCommand provides the mongodb:watchdog:sanitycheck command.
  *
  * @DrupalCommand (
  *     extension="mongodb_watchdog",
@@ -25,7 +25,7 @@ class SanityCheckCommand extends ContainerAwareCommand {
   /**
    * The mongodb.watchdog.sanity_check service.
    *
-   * @var \Drupal\mongodb_watchdog\Install\Sanitycheck
+   * @var \Drupal\mongodb_watchdog\Install\SanityCheck
    */
   protected $sanityCheck;
 

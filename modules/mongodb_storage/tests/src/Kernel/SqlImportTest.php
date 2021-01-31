@@ -11,7 +11,7 @@ use Drupal\mongodb_storage\KeyValueFactory;
 use Drupal\mongodb_storage\Storage;
 
 /**
- * Class SqlImportTest.
+ * Tests the import for the commands.mongodb.storage.import_keyvalue command.
  *
  * @coversDefaultClass \Drupal\mongodb_storage\Install\SqlImport
  *
@@ -50,7 +50,7 @@ class SqlImportTest extends KeyValueTestBase {
   /**
    * Install the database keyvalue tables for import.
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->installSchema('system', [
       SqlImport::KVP_TABLE,
