@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\mongodb\Kernel;
 
@@ -16,13 +16,19 @@ use Drupal\mongodb\MongoDb;
  * @group MongoDB
  */
 abstract class MongoDbTestBase extends KernelTestBase {
+
   const DEFAULT_URI = 'mongodb://localhost:27017';
+
   const CLIENT_BAD_ALIAS = 'bad';
+
   const CLIENT_TEST_ALIAS = 'test';
 
   const DB_BAD_CLIENT_ALIAS = 'bad';
+
   const DB_INVALID_ALIAS = 'invalid';
+
   const DB_DEFAULT_ALIAS = 'default';
+
   const DB_UNSET_ALIAS = 'unset';
 
   /**
@@ -30,7 +36,7 @@ abstract class MongoDbTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [MongoDb::MODULE];
+  protected static $modules = [MongoDb::MODULE];
 
   /**
    * A test-specific instance of Settings.
@@ -65,7 +71,7 @@ abstract class MongoDbTestBase extends KernelTestBase {
    * @return array
    *   A settings array only containing MongoDB-related settings.
    */
-  protected function getSettingsArray() : array {
+  protected function getSettingsArray(): array {
     return [
       'clients' => [
         static::CLIENT_BAD_ALIAS => [
@@ -80,9 +86,18 @@ abstract class MongoDbTestBase extends KernelTestBase {
         ],
       ],
       'databases' => [
-        static::DB_DEFAULT_ALIAS => [static::CLIENT_TEST_ALIAS, $this->getDatabasePrefix()],
-        static::DB_INVALID_ALIAS => [static::CLIENT_TEST_ALIAS, ''],
-        static::DB_BAD_CLIENT_ALIAS => [static::CLIENT_BAD_ALIAS, $this->getDatabasePrefix()],
+        static::DB_DEFAULT_ALIAS => [
+          static::CLIENT_TEST_ALIAS,
+          $this->getDatabasePrefix(),
+        ],
+        static::DB_INVALID_ALIAS => [
+          static::CLIENT_TEST_ALIAS,
+          '',
+        ],
+        static::DB_BAD_CLIENT_ALIAS => [
+          static::CLIENT_BAD_ALIAS,
+          $this->getDatabasePrefix(),
+        ],
       ],
     ];
   }
@@ -90,7 +105,7 @@ abstract class MongoDbTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     // $_ENV if it comes from phpunit.xml <env>
     // $_SERVER if it comes from the phpunit command line environment.
@@ -104,7 +119,7 @@ abstract class MongoDbTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown() {
+  public function tearDown(): void {
     $clientFactory = new ClientFactory($this->settings);
     $databaseFactory = new DatabaseFactory($clientFactory, $this->settings);
     $databaseFactory->get(static::DB_DEFAULT_ALIAS)

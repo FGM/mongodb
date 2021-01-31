@@ -84,7 +84,7 @@ before_script:
 
   # install dependencies (for the module) and Coveralls (for coverage) as part of the root vendors. Get rid of PHPunit < 7 and locked dependencies.
   - rm -fr composer.lock vendor
-  - composer require -v "drush/drush:^10" drupal/console "mongodb/mongodb:^1.4.0" "phpunit/phpunit:^7.5" $COVERALLS
+  - composer require -v "drush/drush:^10" drupal/console "mongodb/mongodb:^1.4.0" "phpunit/phpunit:^9.5" "phpspec/prophecy-phpunit:^2" $COVERALLS
   - composer show mongodb/mongodb
 
   # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path

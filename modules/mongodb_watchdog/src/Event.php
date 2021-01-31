@@ -8,7 +8,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use MongoDB\BSON\Unserializable;
 
 /**
- * Class Event.
+ * Class Event is a value object for a logged event.
  *
  * @package Drupal\mongodb_watchdog
  *

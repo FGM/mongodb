@@ -9,7 +9,7 @@ use Drupal\mongodb\DatabaseFactory;
 use Drupal\mongodb_watchdog\Logger;
 
 /**
- * Class SanityCheck.
+ * Class SanityCheck provides some reasonableness checks for MongoDB contents.
  *
  * @see \Drupal\mongodb_watchdog\Command\SanityCheckCommand
  * @see \Drupal\mongodb_watchdog\Commands\MongoDbWatchdogCommands::sanityCheck()

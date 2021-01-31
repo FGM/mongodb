@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\mongodb_watchdog\Functional;
 
@@ -15,21 +15,26 @@ use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ControllerTest.
+ * Test the MongoDB report controllers.
  *
  * @group MongoDB
  */
 class ControllerTest extends BrowserTestBase {
+
   use StringTranslationTrait;
 
   const DEFAULT_URI = 'mongodb://localhost:27017';
+
   const CLIENT_TEST_ALIAS = 'test';
 
   const DB_DEFAULT_ALIAS = 'default';
 
   const PATH_DENIED = '/admin/reports/mongodb/watchdog/access-denied';
+
   const PATH_EVENT_BASE = "/admin/reports/mongodb/watchdog/";
+
   const PATH_NOT_FOUND = '/admin/reports/mongodb/watchdog/page-not-found';
+
   const PATH_OVERVIEW = 'admin/reports/mongodb/watchdog';
 
   /**
@@ -131,7 +136,7 @@ class ControllerTest extends BrowserTestBase {
    *
    * @see \Drupal\Tests\mongodb_watchdog\Functional\ControllerTest::writeSettings()
    */
-  public function setUp() {
+  public function setUp(): void {
     // $_ENV if it comes from phpunit.xml <env>
     // $_SERVER if it comes from the phpunit command line environment.
     $this->uri = $_ENV['MONGODB_URI']
@@ -139,23 +144,31 @@ class ControllerTest extends BrowserTestBase {
       ?? static::DEFAULT_URI;
 
     // This line customizes the parent site; ::writeSettings the child site.
-    $this->settings = new Settings([
-      MongoDb::MODULE => $this->getSettingsArray(),
-    ]);
+    $this->settings = new Settings(
+      [
+        MongoDb::MODULE => $this->getSettingsArray(),
+      ]
+    );
 
     parent::setUp();
 
     // Create users.
     $this->adminUser = $this->drupalCreateUser([], 'test_admin', TRUE);
-    $this->bigUser = $this->drupalCreateUser([
-      'administer site configuration',
-      'access administration pages',
-      'access site reports',
-      'administer users',
-    ], 'test_honcho');
-    $this->anyUser = $this->drupalCreateUser([
-      'access content',
-    ], 'test_lambda');
+    $this->bigUser = $this->drupalCreateUser(
+      [
+        'administer site configuration',
+        'access administration pages',
+        'access site reports',
+        'administer users',
+      ],
+      'test_honcho'
+    );
+    $this->anyUser = $this->drupalCreateUser(
+      [
+        'access content',
+      ],
+      'test_lambda'
+    );
 
     $this->requestTime = $this->container
       ->get('datetime.time')
@@ -176,7 +189,7 @@ class ControllerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown() {
+  public function tearDown(): void {
     // Get the database before container is torn down.
     $database = $this->container
       ->get(MongoDb::SERVICE_DB_FACTORY)
@@ -226,7 +239,7 @@ class ControllerTest extends BrowserTestBase {
    * @return array
    *   A settings array only containing MongoDB-related settings.
    */
-  protected function getSettingsArray() : array {
+  protected function getSettingsArray(): array {
     return [
       'clients' => [
         static::CLIENT_TEST_ALIAS => [
@@ -236,8 +249,14 @@ class ControllerTest extends BrowserTestBase {
         ],
       ],
       'databases' => [
-        static::DB_DEFAULT_ALIAS => [static::CLIENT_TEST_ALIAS, $this->getDatabasePrefix()],
-        Logger::DB_LOGGER => [static::CLIENT_TEST_ALIAS, $this->getDatabasePrefix()],
+        static::DB_DEFAULT_ALIAS => [
+          static::CLIENT_TEST_ALIAS,
+          $this->getDatabasePrefix(),
+        ],
+        Logger::DB_LOGGER => [
+          static::CLIENT_TEST_ALIAS,
+          $this->getDatabasePrefix(),
+        ],
       ],
     ];
   }
@@ -250,7 +269,7 @@ class ControllerTest extends BrowserTestBase {
    *
    * @see \Drupal\KernelTests\KernelTestBase::getDatabasePrefix()
    */
-  protected function getDatabasePrefix() : string {
+  protected function getDatabasePrefix(): string {
     return $this->databasePrefix ?? '';
   }
 
@@ -260,7 +279,7 @@ class ControllerTest extends BrowserTestBase {
    * @return array
    *   List of entries and their information.
    */
-  protected function getLogEntries() : array {
+  protected function getLogEntries(): array {
     $entries = [];
     if ($table = $this->getLogsEntriesTable()) {
       /** @var \Behat\Mink\Element\NodeElement $row */
@@ -286,7 +305,7 @@ class ControllerTest extends BrowserTestBase {
    * @return int|null
    *   The watchdog severity constant or NULL if not found.
    */
-  protected function getSeverityConstant(string $class) : int {
+  protected function getSeverityConstant(string $class): int {
     // Class: "mongodb-watchdog__severity--(level)", prefix length = 28.
     $level = substr($class, 28);
     return static::LEVEL_TRANSLATION[$level];
@@ -298,7 +317,7 @@ class ControllerTest extends BrowserTestBase {
    * @return \Behat\Mink\Element\NodeElement[]
    *   The return value of a xpath search.
    */
-  protected function getLogsEntriesTable() : array {
+  protected function getLogsEntriesTable(): array {
     return $this->xpath('.//table/tbody/tr');
   }
 
@@ -311,7 +330,10 @@ class ControllerTest extends BrowserTestBase {
   protected function assertTypeCount(array $types) {
     $entries = $this->getLogEntries();
     $reducer = function ($accu, $curr) {
-      $accu[$curr['type'] . '-' . $curr['severity']] = [$curr['type'], $curr['severity']];
+      $accu[$curr['type'] . '-' . $curr['severity']] = [
+        $curr['type'],
+        $curr['severity'],
+      ];
       return $accu;
     };
     $actual = array_reduce($entries, $reducer, []);
@@ -339,13 +361,13 @@ class ControllerTest extends BrowserTestBase {
   ) {
     $ip = '::1';
     $context = [
-      'channel'     => $type,
-      'link'        => NULL,
-      'user'        => ['uid' => $this->bigUser->id()],
+      'channel' => $type,
+      'link' => NULL,
+      'user' => ['uid' => $this->bigUser->id()],
       'request_uri' => "http://[$ip]/",
-      'referer'     => $_SERVER['HTTP_REFERER'] ?? '',
-      'ip'          => $ip,
-      'timestamp'   => $this->requestTime,
+      'referer' => $_SERVER['HTTP_REFERER'] ?? '',
+      'ip' => $ip,
+      'timestamp' => $this->requestTime,
     ];
     $message = $this->randomString();
     for ($i = 0; $i < $count; $i++) {
@@ -498,15 +520,21 @@ class ControllerTest extends BrowserTestBase {
     /** @var \Drupal\mongodb_watchdog\Logger $logger */
     $logger = $this->container->get(Logger::SERVICE_LOGGER);
     $templates = $logger->templateCollection();
-    $this->assertEquals(1, $templates->countDocuments(),
-      'Logging created templates collection and added a template to it.');
+    $this->assertEquals(
+      1,
+      $templates->countDocuments(),
+      'Logging created templates collection and added a template to it.'
+    );
 
     $template = $templates->findOne(['message' => $message], MongoDb::ID_PROJECTION);
     $this->assertNotNull($template, "Logged message was found: [${message}]");
     $templateId = $template['_id'];
     $events = $logger->eventCollection($templateId);
-    $this->assertEquals(1, $events->countDocuments(),
-      'Logging created events collection and added a template to it.');
+    $this->assertEquals(
+      1,
+      $events->countDocuments(),
+      'Logging created events collection and added a template to it.'
+    );
 
     // Login the admin user.
     $this->drupalLogin($this->adminUser);
@@ -525,8 +553,10 @@ class ControllerTest extends BrowserTestBase {
         . json_encode($messages);
     }
     $this->assertEquals(0, $count, $failMessage);
-    $this->assertFalse($logger->eventCollections()->valid(),
-      "Event collections were dropped");
+    $this->assertFalse(
+      $logger->eventCollections()->valid(),
+      "Event collections were dropped"
+    );
   }
 
   /**
@@ -573,9 +603,12 @@ class ControllerTest extends BrowserTestBase {
       $this->drupalPostForm(NULL, $edit, 'Filter');
 
       // Check whether the displayed event templates match our filter.
-      $filteredTypes = array_filter($types, function (array $type) use ($typeName) {
-        return $type['type'] === $typeName;
-      });
+      $filteredTypes = array_filter(
+        $types,
+        function (array $type) use ($typeName) {
+          return $type['type'] === $typeName;
+        }
+      );
       $this->assertTypeCount($filteredTypes);
     }
 
@@ -588,9 +621,12 @@ class ControllerTest extends BrowserTestBase {
       ];
       $this->drupalPostForm(NULL, $edit, 'Filter');
 
-      $filteredTypes = array_filter($types, function (array $type) use ($typeType, $typeSeverity) {
-        return $type['type'] === $typeType && $type['severity'] == $typeSeverity;
-      });
+      $filteredTypes = array_filter(
+        $types,
+        function (array $type) use ($typeType, $typeSeverity) {
+          return $type['type'] === $typeType && $type['severity'] == $typeSeverity;
+        }
+      );
 
       $this->assertTypeCount($filteredTypes);
     }
