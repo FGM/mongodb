@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class SqlImportCommand.
+ * Provides the commands.mongodb.storage.import_keyvalue console command.
  *
  * @DrupalCommand (
  *     extension="mongodb_storage",

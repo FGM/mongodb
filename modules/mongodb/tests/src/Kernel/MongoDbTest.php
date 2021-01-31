@@ -8,7 +8,7 @@ use Drupal\mongodb\MongoDb;
 use MongoDB\Collection;
 
 /**
- * Class CommandsTest.
+ * Tests the MongoDB main class.
  *
  * @coversDefaultClass \Drupal\mongodb\MongoDb
  *

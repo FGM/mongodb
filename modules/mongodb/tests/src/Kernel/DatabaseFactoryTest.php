@@ -10,7 +10,7 @@ use Drupal\mongodb\MongoDb;
 use MongoDB\Database;
 
 /**
- * Class DatabaseFactoryTest.
+ * Tests the DatabaseFactory.
  *
  * @coversDefaultClass \Drupal\mongodb\DatabaseFactory
  *
@@ -42,7 +42,7 @@ class DatabaseFactoryTest extends MongoDbTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->clientFactory = new ClientFactory($this->settings);
     $this->databaseFactory = new DatabaseFactory($this->clientFactory, $this->settings);

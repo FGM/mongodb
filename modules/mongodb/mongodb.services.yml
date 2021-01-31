@@ -12,3 +12,12 @@ services:
       - '@settings'
       - '@serialization.yaml'
     class: '\Drupal\mongodb\Install\Tools'
+
+  mongodb.queue_storage:
+    class: 'MongoDB\Database'
+    factory: ['@mongodb.database_factory', 'get']
+    arguments: ['queue']
+
+  queue.mongodb:
+    class: Drupal\mongodb\Queue\QueueMongodbFactory
+    arguments: ['@mongodb.queue_storage', '@settings']

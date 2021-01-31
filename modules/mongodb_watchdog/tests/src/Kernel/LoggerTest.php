@@ -32,7 +32,7 @@ class LoggerTest extends MongoDbTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     MongoDb::MODULE,
     Logger::MODULE,
@@ -41,7 +41,7 @@ class LoggerTest extends MongoDbTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->installConfig(Logger::MODULE);
   }
@@ -115,6 +115,22 @@ class LoggerTest extends MongoDbTestBase {
   protected function find($message) {
     $ret = $this->collection->findOne(['message' => $message]);
     return $ret;
+  }
+
+  /**
+   * Ensure logging from a closure does not fail.
+   *
+   * @covers ::enhanceLogEntry
+   *
+   * @see https://www.drupal.org/project/mongodb/issues/3193195
+   */
+  public function testLogClosure() {
+    $logger = $this->container->get(Logger::SERVICE_LOGGER);
+    $closure = function () use ($logger) {
+      $logger->notice("This fails on PHP below 7.0, and 5.6 needs to be supported for Drupal 8. The alcaeus adapter passes the version check, but does not address this.");
+      return 1;
+    };
+    $this->assertEquals(1, $closure());
   }
 
   /**

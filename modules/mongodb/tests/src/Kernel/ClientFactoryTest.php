@@ -9,7 +9,7 @@ use Drupal\mongodb\ClientFactory;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 
 /**
- * Class ClientFactoryTest.
+ * Tests the ClientFactory.
  *
  * @coversDefaultClass \Drupal\mongodb\ClientFactory
  *

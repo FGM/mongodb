@@ -32,6 +32,15 @@ settings,
     * `get(string $alias): MongoDb\Client`: returns a `Client` instance matching
       the value defined in Drupal settings for `$alias`.
 
+##  Tell Drupal to use the queue backend
+
+This module provides default queue implementation.
+
+When you have configured basic information (host, port, ... - see install)
+add this to your settings.php file:
+
+    # Use for all queues unless otherwise specified for a specific queue.
+    $settings['queue_default'] = 'queue.mongodb';
 
 ## Troubleshooting commands:
 

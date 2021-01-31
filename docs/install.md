@@ -81,6 +81,7 @@ $settings['mongodb'] = [
     'default' => ['default', 'drupal'],
     'keyvalue' => ['default', 'keyvalue'],
     'logger' => ['default', 'logger'],
+    'queue' => ['default', 'queue'],
   ],
 ];
 ```
@@ -91,6 +92,8 @@ $settings['mongodb'] = [
       same `default` MongoDB server, but in a separate `keyvalue` database.
     * The `logger` database alias will store logger collections on the same
       `default` MongoDB server, but in a separate `logger` database.
+    * The `queue` database alias will store queue collections on the same
+          `default` MongoDB server, but in a separate `queue` database. 
 
 The module contains an example default implementation of these settings, which
 you can copy or include, in `mongodb/example.settings.local.php`.
