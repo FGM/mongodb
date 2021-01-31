@@ -11,7 +11,7 @@ use Drupal\mongodb_storage\KeyValueFactory;
 use Drupal\mongodb_storage\Storage;
 
 /**
- * Class SqlImportTest.
+ * Tests the import for the commands.mongodb.storage.import_keyvalue command.
  *
  * @coversDefaultClass \Drupal\mongodb_storage\Install\SqlImport
  *

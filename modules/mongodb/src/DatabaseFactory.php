@@ -8,7 +8,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Site\Settings;
 
 /**
- * Class DatabaseFactory.
+ * Helper class to construct a MongoDB Database with Drupal specific config.
  *
  * @package Drupal\mongodb
  */

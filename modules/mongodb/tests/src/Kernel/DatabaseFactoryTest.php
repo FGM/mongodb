@@ -10,7 +10,7 @@ use Drupal\mongodb\MongoDb;
 use MongoDB\Database;
 
 /**
- * Class DatabaseFactoryTest.
+ * Tests the DatabaseFactory.
  *
  * @coversDefaultClass \Drupal\mongodb\DatabaseFactory
  *

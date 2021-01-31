@@ -9,7 +9,7 @@ use Drupal\mongodb_storage\KeyValueStoreExpirable;
 use Drupal\mongodb_storage\Storage;
 
 /**
- * Class KeyValueFactoryTest.
+ * Tests the KeyValueFactory.
  *
  * @coversDefaultClass \Drupal\mongodb_storage\KeyValueFactory
  *

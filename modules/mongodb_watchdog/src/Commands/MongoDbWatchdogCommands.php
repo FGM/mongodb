@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\mongodb_watchdog\Commands;
 
-use Drupal\mongodb_watchdog\Install\Sanitycheck;
+use Drupal\mongodb_watchdog\Install\SanityCheck;
 use Drush\Commands\DrushCommands;
 
 /**
@@ -15,17 +15,17 @@ class MongoDbWatchdogCommands extends DrushCommands {
   /**
    * The mongodb.watchdog.sanity_check service.
    *
-   * @var \Drupal\mongodb_watchdog\Install\Sanitycheck
+   * @var \Drupal\mongodb_watchdog\Install\SanityCheck
    */
   protected $sanityCheck;
 
   /**
    * MongodbWatchdogCommands constructor.
    *
-   * @param \Drupal\mongodb_watchdog\Install\Sanitycheck $sanityCheck
+   * @param \Drupal\mongodb_watchdog\Install\SanityCheck $sanityCheck
    *   The mongodb.watchdog.sanity_check service.
    */
-  public function __construct(Sanitycheck $sanityCheck) {
+  public function __construct(SanityCheck $sanityCheck) {
     $this->sanityCheck = $sanityCheck;
   }
 
