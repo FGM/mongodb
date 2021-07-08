@@ -1,7 +1,7 @@
 INTRODUCTION
 ============
 
-MongoDB integration for Drupal, version 8.x-2.0-dev.
+MongoDB integration for Drupal 8.9.x and 9.x, version 8.x-2.0-dev.
 
 [![Build Status](https://travis-ci.org/fgm/mongodb.svg?branch=8.x-2.x)](https://travis-ci.org/fgm/mongodb)
 [![Coverage Status](https://coveralls.io/repos/github/fgm/mongodb/badge.svg?branch=8.x-2.x)](https://coveralls.io/github/fgm/mongodb?branch=8.x-2.x)

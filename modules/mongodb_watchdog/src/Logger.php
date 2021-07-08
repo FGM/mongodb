@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\mongodb_watchdog;
 
@@ -29,16 +29,22 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @package Drupal\mongodb_watchdog
  */
 class Logger extends AbstractLogger {
+
   use StringTranslationTrait;
 
   // Configuration-related constants.
   // The configuration item.
   const CONFIG_NAME = 'mongodb_watchdog.settings';
+
   // The individual configuration keys.
   const CONFIG_ITEMS = 'items';
+
   const CONFIG_REQUESTS = 'requests';
+
   const CONFIG_LIMIT = 'limit';
+
   const CONFIG_ITEMS_PER_PAGE = 'items_per_page';
+
   const CONFIG_REQUEST_TRACKING = 'request_tracking';
 
   // The logger database alias.
@@ -51,16 +57,22 @@ class Logger extends AbstractLogger {
 
   // The service for the specific PSR-3 logger for MongoDB.
   const SERVICE_LOGGER = 'mongodb.logger';
+
   // The service for the Drupal LoggerChannel for this module, logging to all
   // active loggers.
   const SERVICE_CHANNEL = 'logger.channel.mongodb_watchdog';
+
   // The service for hook_requirements().
   const SERVICE_REQUIREMENTS = 'mongodb.watchdog_requirements';
+
   const SERVICE_SANITY_CHECK = 'mongodb.watchdog.sanity_check';
 
   const TRACKER_COLLECTION = 'watchdog_tracker';
+
   const TEMPLATE_COLLECTION = 'watchdog';
+
   const EVENT_COLLECTION_PREFIX = 'watchdog_event_';
+
   const EVENT_COLLECTIONS_PATTERN = '^watchdog_event_[[:xdigit:]]{32}$';
 
   const LEGACY_TYPE_MAP = [
@@ -255,8 +267,10 @@ class Logger extends AbstractLogger {
            */
           $entry['%line'] = isset($bt['line']) ? $bt['line'] : NULL;
           if (empty($bt['file'])) {
-            $method = new \ReflectionMethod($function);
-            $bt['file'] = $method->getFileName();
+            $reflectionObj = empty($bt['class'])
+              ? new \ReflectionFunction($function)
+              : new \ReflectionMethod($function);
+            $bt['file'] = $reflectionObj->getFileName();
           }
 
           $entry['%file'] = $bt['file'];
@@ -288,8 +302,9 @@ class Logger extends AbstractLogger {
     }
 
     // Convert PSR3-style messages to SafeMarkup::format() style, so they can be
-    // translated too in runtime.
-    $placeholders = $this->parser->parseMessagePlaceholders($template, $context);
+    // translated at runtime too.
+    $placeholders = $this->parser->parseMessagePlaceholders($template,
+      $context);
 
     // If code location information is all present, as for errors/exceptions,
     // then use it to build the message template id.
@@ -359,7 +374,8 @@ class Logger extends AbstractLogger {
         'size' => $this->items * 1024,
         'max' => $this->items,
       ];
-      $this->database->createCollection($eventCollection->getCollectionName(), $options);
+      $this->database->createCollection($eventCollection->getCollectionName(),
+        $options);
 
       // Do not create this index by default, as its cost is useless if request
       // tracking is not enabled.
@@ -437,10 +453,11 @@ class Logger extends AbstractLogger {
       'size' => $size,
     ];
     $this->database->command($command);
-    $this->messenger->addStatus($this->t('@name converted to capped collection size @size.', [
-      '@name' => $name,
-      '@size' => $size,
-    ]));
+    $this->messenger->addStatus($this->t('@name converted to capped collection size @size.',
+      [
+        '@name' => $name,
+        '@size' => $size,
+      ]));
     return $collection;
   }
 
@@ -465,7 +482,7 @@ class Logger extends AbstractLogger {
       ->selectCollection($name);
 
     $info = current(iterator_to_array((
-      $this->database->listCollections(['filter' => ['name' => $name]])
+    $this->database->listCollections(['filter' => ['name' => $name]])
     )));
     // If the collection doesn't exist, create it, ensuring later operations are
     // actually run after the server writes:
@@ -493,7 +510,8 @@ class Logger extends AbstractLogger {
    * numbers should be much faster to create than one with a string included.
    */
   public function ensureSchema(): void {
-    $trackerCollection = $this->ensureCappedCollection(static::TRACKER_COLLECTION, $this->requests * 1024);
+    $trackerCollection = $this->ensureCappedCollection(static::TRACKER_COLLECTION,
+      $this->requests * 1024);
     $indexes = [
       [
         'name' => 'tracker-request',
@@ -549,9 +567,10 @@ class Logger extends AbstractLogger {
   public function eventCollection($templateId): Collection {
     $name = static::EVENT_COLLECTION_PREFIX . $templateId;
     if (!preg_match('/' . static::EVENT_COLLECTIONS_PATTERN . '/', $name)) {
-      throw new InvalidArgumentException($this->t('Invalid watchdog template id `@id`.', [
-        '@id' => $name,
-      ]));
+      throw new InvalidArgumentException($this->t('Invalid watchdog template id `@id`.',
+        [
+          '@id' => $name,
+        ]));
     }
     $collection = $this->database->selectCollection($name);
     return $collection;
@@ -563,7 +582,7 @@ class Logger extends AbstractLogger {
    * @return \MongoDB\Model\CollectionInfoIterator
    *   The collections with a name matching the event pattern.
    */
-  public function eventCollections() : CollectionInfoIterator {
+  public function eventCollections(): CollectionInfoIterator {
     $options = [
       'filter' => [
         'name' => ['$regex' => static::EVENT_COLLECTIONS_PATTERN],
@@ -582,7 +601,7 @@ class Logger extends AbstractLogger {
    * @return int
    *   The number of matching events.
    */
-  public function eventCount(EventTemplate $template) : int {
+  public function eventCount(EventTemplate $template): int {
     return $this->eventCollection($template->_id)
       ->countDocuments();
   }
@@ -707,11 +726,11 @@ class Logger extends AbstractLogger {
     $cursor = $this
       ->trackerCollection()
       ->find($selector, static::LEGACY_TYPE_MAP + [
-        'projection' => [
-          '_id' => 0,
-          'template_id' => 1,
-        ],
-      ]);
+          'projection' => [
+            '_id' => 0,
+            'template_id' => 1,
+          ],
+        ]);
     $templateIds = [];
     foreach ($cursor as $request) {
       $templateIds[] = $request['template_id'];
@@ -773,14 +792,21 @@ class Logger extends AbstractLogger {
    * @return \MongoDB\Driver\Cursor
    *   A query result for the templates.
    */
-  public function templates(array $types = [], array $levels = [], $skip = 0, $limit = 0): Cursor {
+  public function templates(
+    array $types = [],
+    array $levels = [],
+    $skip = 0,
+    $limit = 0
+  ): Cursor {
     $selector = [];
     if (!empty($types)) {
       $selector['type'] = ['$in' => array_values($types)];
     }
     if (!empty($levels) && count($levels) !== count(RfcLogLevel::getLevels())) {
       // Severity levels come back from the session as strings, not integers.
-      $selector['severity'] = ['$in' => array_values(array_map('intval', $levels))];
+      $selector['severity'] = [
+        '$in' => array_values(array_map('intval', $levels)),
+      ];
     }
     $options = [
       'sort' => [

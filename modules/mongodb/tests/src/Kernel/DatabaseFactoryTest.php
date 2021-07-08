@@ -23,7 +23,7 @@ class DatabaseFactoryTest extends MongoDbTestBase {
    *
    * @var array
    */
-  public static $modules = [MongoDb::MODULE];
+  protected static $modules = [MongoDb::MODULE];
 
   /**
    * The mongodb.client_factory service.
@@ -42,7 +42,7 @@ class DatabaseFactoryTest extends MongoDbTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->clientFactory = new ClientFactory($this->settings);
     $this->databaseFactory = new DatabaseFactory($this->clientFactory, $this->settings);

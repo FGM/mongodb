@@ -25,7 +25,7 @@ class ControllerBaseTest extends UnitTestCase {
    *
    * @dataProvider pageGenerationData
    */
-  public function testPageGeneration(int $requestedPage, int $count, int $expected) {
+  public function testPageGeneration(int $requestedPage, float $count, int $expected) {
     $actual = ControllerBase::getPage($count, $requestedPage, static::ITEMS_PER_PAGE);
     $this->assertEquals($expected, $actual);
   }

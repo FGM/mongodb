@@ -1,0 +1,6 @@
+name: 'MongoDB Watchdog test support'
+type: module
+description: 'Module to test the MongoDB Watchdog Logger.'
+package: MongoDB
+hidden: true
+core_version_requirement: ^8|^9

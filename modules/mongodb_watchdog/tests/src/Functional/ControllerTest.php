@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\mongodb_watchdog\Functional;
 
@@ -131,7 +131,7 @@ class ControllerTest extends BrowserTestBase {
    *
    * @see \Drupal\Tests\mongodb_watchdog\Functional\ControllerTest::writeSettings()
    */
-  public function setUp() {
+  public function setUp(): void {
     // $_ENV if it comes from phpunit.xml <env>
     // $_SERVER if it comes from the phpunit command line environment.
     $this->uri = $_ENV['MONGODB_URI']
@@ -176,7 +176,7 @@ class ControllerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown() {
+  public function tearDown(): void {
     // Get the database before container is torn down.
     $database = $this->container
       ->get(MongoDb::SERVICE_DB_FACTORY)
@@ -511,7 +511,8 @@ class ControllerTest extends BrowserTestBase {
     // Login the admin user.
     $this->drupalLogin($this->adminUser);
     // Now post to clear the db table.
-    $this->drupalPostForm('admin/reports/mongodb/confirm', [], 'Confirm');
+    $this->drupalGet('admin/reports/mongodb/confirm');
+    $this->submitForm([], 'Confirm');
 
     // Make the sure logs were dropped. After a UI clear, the templates
     // collection should exist, since it is recreated as a capped collection as
@@ -570,7 +571,7 @@ class ControllerTest extends BrowserTestBase {
       $edit = [
         'type[]' => [$typeName],
       ];
-      $this->drupalPostForm(NULL, $edit, 'Filter');
+      $this->submitForm($edit, 'Filter');
 
       // Check whether the displayed event templates match our filter.
       $filteredTypes = array_filter($types, function (array $type) use ($typeName) {
@@ -586,7 +587,7 @@ class ControllerTest extends BrowserTestBase {
         'type[]' => $typeType = $type['type'],
         'severity[]' => $typeSeverity = $type['severity'],
       ];
-      $this->drupalPostForm(NULL, $edit, 'Filter');
+      $this->submitForm($edit, 'Filter');
 
       $filteredTypes = array_filter($types, function (array $type) use ($typeType, $typeSeverity) {
         return $type['type'] === $typeType && $type['severity'] == $typeSeverity;

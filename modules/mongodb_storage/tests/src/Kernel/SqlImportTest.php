@@ -4,11 +4,14 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\mongodb_storage\Kernel;
 
+use Drupal\Core\KeyValueStore\DatabaseStorage;
+use Drupal\Core\KeyValueStore\DatabaseStorageExpirable;
 use Drupal\mongodb\MongoDb;
 use Drupal\mongodb_storage\Install\SqlImport;
 use Drupal\mongodb_storage\KeyValueExpirableFactory;
 use Drupal\mongodb_storage\KeyValueFactory;
 use Drupal\mongodb_storage\Storage;
+use Drupal\views\Plugin\views\query\Sql;
 
 /**
  * Class SqlImportTest.
@@ -27,7 +30,7 @@ class SqlImportTest extends KeyValueTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     MongoDb::MODULE,
     Storage::MODULE,
@@ -50,12 +53,8 @@ class SqlImportTest extends KeyValueTestBase {
   /**
    * Install the database keyvalue tables for import.
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
-    $this->installSchema('system', [
-      SqlImport::KVP_TABLE,
-      SqlImport::KVE_TABLE,
-    ]);
     $this->database = $this->container->get('database');
     $this->sqlImport = $this->container->get(Storage::SERVICE_SQL_IMPORT);
   }
@@ -149,10 +148,17 @@ class SqlImportTest extends KeyValueTestBase {
    * @dataProvider importProvider
    */
   public function testImportActual(string $table, string $service, string $prefix) {
-    if (!function_exists(system_schema::class)) {
-      \module_load_install('system');
+    $columns = [];
+    switch ($table) {
+      case SqlImport::KVE_TABLE:
+        $columns = array_keys(DatabaseStorageExpirable::schemaDefinition()['fields']);
+        break;
+      case SqlImport::KVP_TABLE:
+        $columns = array_keys(DatabaseStorage::schemaDefinition()['fields']);
+        break;
+      default:
+        $this->fail("Unexpected table requested: ${table}.");
     }
-    $columns = array_keys(system_schema()[$table]['fields']);
 
     $actualPreDbCount = $this->countTable($table);
     $this->assertEquals(0, $actualPreDbCount);

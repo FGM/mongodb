@@ -17,16 +17,34 @@ use Drupal\Tests\mongodb\Kernel\MongoDbTestBase;
  * @group MongoDB
  */
 abstract class KeyValueTestBase extends MongoDbTestBase {
+  const MAGIC = 'mongodb.nonexistent';
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     MongoDb::MODULE,
     Storage::MODULE,
   ];
+
+  public function setUp(): void {
+    parent::setUp();
+
+    // Force creation of KV tables after https://www.drupal.org/node/3143286
+    /** @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $kvpf */
+    $kvpf = $this->container->get('keyvalue.database');
+    $kvp = $kvpf->get(self::MAGIC);
+    $kvp->set(self::MAGIC, self::MAGIC);
+    $kvp->deleteAll();
+
+    /** @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $kvef */
+    $kvef = $this->container->get('keyvalue.expirable.database');
+    $kve = $kvef->get(self::MAGIC);
+    $kve->set(self::MAGIC, self::MAGIC);
+    $kve->deleteAll();
+  }
 
   /**
    * {@inheritdoc}

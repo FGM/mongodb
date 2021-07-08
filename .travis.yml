@@ -5,15 +5,15 @@ language: php
 sudo: true
 
 php:
-  - 7.3
   - 7.4
+  - 8.0
 
 services:
   - mongodb
 
 matrix:
-#  allow_failures:
-#    - php: 8.0
+  allow_failures:
+    - php: 8.0
   fast_finish: true
 
 env:
@@ -28,7 +28,7 @@ env:
     - PHPUNIT_OPTS="-c phpunit.xml -v --debug --coverage-clover=modules/contrib/$MODULE_NAME/$COVERAGE_FILE"
 
     # Code coverage via coveralls.io
-    - COVERALLS="php-coveralls/php-coveralls:2.1.*"
+    - COVERALLS="php-coveralls/php-coveralls:^2"
 
 cache:
   directories:
@@ -44,7 +44,7 @@ before_install:
   - sed -i '1i export PATH="$HOME/.composer/vendor/bin:$PATH"' $HOME/.bashrc
   - source $HOME/.bashrc
   # Force Composer 1 until all plugins support Composer 2.
-  - composer self-update --1
+  - composer self-update --2
 
   # Drush: 9.x prefers using a local version, so don't require it globally.
 
@@ -77,14 +77,14 @@ before_script:
   - cd ../..
 
   # download Drupal 9 core.
-  - wget -q -O - http://ftp.drupal.org/files/projects/drupal-9.1.x-dev.tar.gz | tar xz
-  - cd drupal-9.1.x-dev
+  - wget -q -O - https://ftp.drupal.org/files/projects/drupal-9.2.x-dev.tar.gz | tar xz
+  - cd drupal-9.2.x-dev
   - mkdir -p modules/contrib
   - mv ../fgm/mongodb modules/contrib
 
   # install dependencies (for the module) and Coveralls (for coverage) as part of the root vendors. Get rid of PHPunit < 7 and locked dependencies.
   - rm -fr composer.lock vendor
-  - composer require -v "drush/drush:^10" drupal/console "mongodb/mongodb:^1.4.0" "phpunit/phpunit:^7.5" $COVERALLS
+  - composer require -v "drush/drush:^10" drupal/console "mongodb/mongodb:^1.5.1" "phpunit/phpunit:^8.5" $COVERALLS
   - composer show mongodb/mongodb
 
   # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path

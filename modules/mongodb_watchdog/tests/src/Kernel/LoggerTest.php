@@ -32,7 +32,7 @@ class LoggerTest extends MongoDbTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     MongoDb::MODULE,
     Logger::MODULE,
@@ -41,7 +41,7 @@ class LoggerTest extends MongoDbTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->installConfig(Logger::MODULE);
   }

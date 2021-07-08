@@ -37,7 +37,7 @@ instance themselves.
     class FooTest extends MongoDbTestBase {
       const MODULE = 'foo';
 
-      public static $modules = [
+      protected static $modules = [
         MongoDb::MODULE,
         static::MODULE,
       ];
@@ -66,7 +66,7 @@ instance themselves.
        * If the tests do not need a specific database, no setUp()/tearDown() is
        * even needed.
        */
-      public function setUp() {
+      public function setUp(): void {
         parent::setUp();
         $this->database = new DatabaseFactory(
           new ClientFactory($this->settings),
@@ -80,7 +80,7 @@ instance themselves.
        * If the tests do not need a specific database, no setUp()/tearDown() is
        * even needed.
        */
-      public function tearDown() {
+      public function tearDown(): void {
         $this->database->drop();
         parent::tearDown();
       }

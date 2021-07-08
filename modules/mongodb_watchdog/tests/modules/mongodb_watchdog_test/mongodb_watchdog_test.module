@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+use Psr\Log\LoggerInterface;
+
+/**
+ * @link https://www.drupal.org/project/mongodb/issues/3219325
+ */
+function mongodb_watchdog_test_3219325(): array {
+  // See \Drupal\mongodb_watchdog\Logger::log()
+  $bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
+  // Fake XDebug being unable to locate the file.
+  unset($bt[0]['file']);
+  return $bt;
+}

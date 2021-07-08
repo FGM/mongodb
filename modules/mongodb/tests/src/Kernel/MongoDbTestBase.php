@@ -30,7 +30,7 @@ abstract class MongoDbTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [MongoDb::MODULE];
+  protected static $modules = [MongoDb::MODULE];
 
   /**
    * A test-specific instance of Settings.
@@ -90,7 +90,7 @@ abstract class MongoDbTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     // $_ENV if it comes from phpunit.xml <env>
     // $_SERVER if it comes from the phpunit command line environment.
@@ -104,7 +104,7 @@ abstract class MongoDbTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown() {
+  public function tearDown(): void {
     $clientFactory = new ClientFactory($this->settings);
     $databaseFactory = new DatabaseFactory($clientFactory, $this->settings);
     $databaseFactory->get(static::DB_DEFAULT_ALIAS)

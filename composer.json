@@ -15,11 +15,10 @@
     }
   ],
   "conflict": {
-    "composer/composer": "2.*",
-    "drupal/console": "< 1.8",
+    "drupal/core": "< 8.9.0",
     "drush/drush": "< 9.7"
   },
-  "description": "Drupal 9.1 driver for MongoDB",
+  "description": "Drupal 9.2 driver for MongoDB",
   "homepage": "https://www.drupal.org/project/mongodb",
   "keywords": ["drupal", "mongodb"],
   "license": "GPL-2.0-or-later",
@@ -39,8 +38,8 @@
   "support": {
     "docs": "https://github.com/fgm/mongodb/blob/8.x-2.x/README.md",
     "email": "support@osinet.fr",
-    "irc": "irc://chat.freenode.net:6697/drupal-mongodb",
-    "issues": "https://www.drupal.org/project/issues/mongodb",
+    "slack": "https://drupal.slack.com/archives/CCF6CGPEC",
+    "issues": "https://www.drupal.org/project/issues/mongodb?text=&status=Open&priorities=All&categories=All&version=all_8.x-2.*&component=All",
     "rss": "https://github.com/fgm/mongodb/commits/8.x-2.x.atom",
     "source": "https://github.com/fgm/mongodb/tree/8.x-2.x"
   },

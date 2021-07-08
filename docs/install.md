@@ -6,11 +6,11 @@ guide assumes that :
 
 * A [MongoDB][download] 4.0 to 4.2.x server instance has already been installed,
   configured and is available for connection from the Drupal instance.
-* The site will be running [Drupal][drupal] 8.8.x or 8.9.x, with [Drush][drush]
+* The site will be running [Drupal][drupal] 8.9.x or 9.x.y, with [Drush][drush]
   10.x.
 * The [mongodb][mongodb] (not [mongo][mongo]) PHP extension version 1.7 or
   later is installed and configured.
-* PHP is version 7.2.x to 7.3.x. PHP 7.4.x might work but is not tested: be sure
+* PHP is version 7.3.x to 8.0.x. PHP 8.0.x should work but is not tested: be sure
   to [report any issue][report] you could have with it.
 * We recommend [using Composer](#installing-using-composer) for installing this
   module.
@@ -47,7 +47,7 @@ by the [free monitoring][freemonitoring] service offered by MongoDB Inc.
 ## Settings Configuration
 
 * Download the module package, as per
-  [Installing contributed modules (Drupal 8)][install]
+  [Installing contributed modules (Drupal 8/9)][install]
 * Copy the relevant section from `mongodb/example.settings.local.php` to your
   `settings.local.php` file if you use one, or `settings.php` otherwise,
   and adapt it to match your MongoDB settings. These settings are used by the
